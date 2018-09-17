@@ -9,6 +9,7 @@ lazy val root = (project in file(".")).
     )),
     name := "xIS",
     libraryDependencies += scalaTest % Test,
-	libraryDependencies += "net.ruippeixotog" %% "scala-scraper" % "2.1.0",
-    libraryDependencies += "joda-time" % "joda-time" % "2.10"
+		libraryDependencies += "net.ruippeixotog" %% "scala-scraper" % "2.1.0",
+    libraryDependencies += "joda-time" % "joda-time" % "2.10",
+		libraryDependencies += "mysql" % "mysql-connector-java" % "5.1.12" 
   )

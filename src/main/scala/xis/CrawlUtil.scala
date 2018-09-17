@@ -1,4 +1,5 @@
 import ConnectUtil._
+import SqlUtil._
 
 import net.ruippeixotog.scalascraper.dsl.DSL._
 import net.ruippeixotog.scalascraper.dsl.DSL.Extract._
@@ -11,6 +12,7 @@ object CrawlUtil {
   private val articleUrl = "https://portal.kaist.ac.kr/board/read.brd"
 
   private def getBoard(board: String, index: Int)(implicit cookie: Cookie): Document = {
+		getConnection()
     post(boardUrl, Map("page" -> index.toString, "boardId" -> board))._1
   }
 

@@ -1,10 +1,20 @@
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
+import java.sql.*;
 import org.joda.time.DateTime;
 
 class JavaSide {
   static void main(JavaInterface ji) {
+    try {
+      Class.forName("com.mysql.jdbc.Driver");
+      System.out.println("Driver Connection");
+      Connection connection = DriverManager.getConnection("jdbc:mysql://172.18.0.3", "creambears", "zmflaqpdjwm");
+      System.out.println("Success");
+    }
+    catch (Exception e) {
+      System.out.println("error occurred");
+    }
    // example(ji);
     randomSelect(ji);
   }

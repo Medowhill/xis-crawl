@@ -2,6 +2,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
 import java.sql.*;
+
 import org.joda.time.DateTime;
 
 class JavaSide {
@@ -9,13 +10,12 @@ class JavaSide {
     try {
       Class.forName("com.mysql.jdbc.Driver");
       System.out.println("Driver Connection");
-      Connection connection = DriverManager.getConnection("jdbc:mysql://172.18.0.3", "creambears", "zmflaqpdjwm");
       System.out.println("Success");
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       System.out.println("error occurred");
     }
-   // example(ji);
+
+    // example(ji);
     randomSelect(ji);
   }
 

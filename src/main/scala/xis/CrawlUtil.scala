@@ -1,4 +1,5 @@
 import ConnectUtil._
+import SqlUtil._
 
 import net.ruippeixotog.scalascraper.dsl.DSL._
 import net.ruippeixotog.scalascraper.dsl.DSL.Extract._
@@ -9,6 +10,7 @@ object CrawlUtil {
 
   private val boardUrl = "https://portal.kaist.ac.kr/board/list.brd"
   private val articleUrl = "https://portal.kaist.ac.kr/board/read.brd"
+  private val connection = getConnection()
 
   private def getBoard(board: String, index: Int)(implicit cookie: Cookie): Document = {
     post(boardUrl, Map("page" -> index.toString, "boardId" -> board))._1
@@ -53,7 +55,16 @@ object CrawlUtil {
         val attached = (att >> elementList(".req_file") >?> allText("a")).flatten
         val contents = con >> allText("td")
         val images = (con >> elementList("img") >?> attr("src")("img")).flatten
-        Some(Article(board, id, title, author, department, time, reads.toInt, attached, contents, images))
+        val statement = connection.createStatement
+
+        val hits = reads.toInt
+        statement.executeUpdate("USE CRAWL")
+        val sqlArticle = s"INSERT INTO ARTICLES VALUES (\'$board\', \'$id\', \'${title.replaceAll("['\"\\\\]", "\\\\$0")}\', \'$author\', \'$department\', \'$time\', $hits, \'${contents.replaceAll("['\"\\\\]", "\\\\$0")}\')"
+		println(sqlArticle)
+        statement.executeUpdate(sqlArticle)
+        attached.foreach(elem => statement.executeUpdate(s"INSERT INTO ATTACHEDLINKS (articleId, linkPath) VALUES (\'$id\', \'$elem\')"))
+        images.foreach(elem => statement.executeUpdate(s"INSERT INTO IMAGELINKS (articleId, imagePath) VALUES (\'$id\', \'$elem\')"))
+        Some(Article(board, id, title, author, department, time, hits, attached, contents, images))
       case _ => None
     }
   }
